@@ -1,12 +1,24 @@
 # Linux `.deb`
 
-Ordinary package: installs **Sieged Empires** with the custom icon.
+Ordinary package: installs **Sieged Empires** with the custom icon and desktop integration.
+
+## Release Download
+
+- **[Download SiegedEmpires-1.0.0-linux.deb](https://github.com/AlbertMerle/sieged-empires-launcher/releases/download/v1.0.0/SiegedEmpires-1.0.0-linux.deb)** (GitHub Release)
+- **[Latest Release Assets](https://github.com/AlbertMerle/sieged-empires-launcher/releases/latest)**
+
+## Install
 
 ```bash
-sudo dpkg -i SiegedEmpires-*-linux.deb
+sudo dpkg -i SiegedEmpires-1.0.0-linux.deb
 sieged-empires
 ```
 
-Login + download happen **inside the app** (not during `dpkg`).
+Login + pack download happen **inside the app** (not during `dpkg`).
 
-Build: `cd installer && npm run dist:linux`
+## Build
+
+```bash
+cd installer
+npm run dist:linux
+```
