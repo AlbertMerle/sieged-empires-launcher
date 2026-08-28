@@ -1,0 +1,85 @@
+{
+  "minecraft:armadillo": [
+    "se_desert_armadillo"
+  ],
+  "minecraft:bee": [
+    "se_hot_bee",
+    "se_temperate_bee"
+  ],
+  "minecraft:camel": [
+    "se_desert_camel"
+  ],
+  "minecraft:cat": [
+    "se_desert_cat",
+    "se_temperate_cat"
+  ],
+  "minecraft:chicken": [
+    "se_hot_chicken",
+    "se_temperate_chicken"
+  ],
+  "minecraft:cow": [
+    "se_hot_cow",
+    "se_temperate_cow"
+  ],
+  "minecraft:donkey": [
+    "se_cold_donkey",
+    "se_desert_donkey",
+    "se_hot_donkey",
+    "se_temperate_donkey"
+  ],
+  "minecraft:fox": [
+    "se_cold_fox",
+    "se_temperate_fox"
+  ],
+  "minecraft:frog": [
+    "se_hot_frog",
+    "se_temperate_frog"
+  ],
+  "minecraft:goat": [
+    "se_desert_goat",
+    "se_hot_goat"
+  ],
+  "minecraft:horse": [
+    "se_cold_horse",
+    "se_desert_horse",
+    "se_hot_horse",
+    "se_temperate_horse"
+  ],
+  "minecraft:llama": [
+    "se_desert_llama"
+  ],
+  "minecraft:mule": [
+    "se_cold_mule",
+    "se_desert_mule",
+    "se_hot_mule",
+    "se_temperate_mule"
+  ],
+  "minecraft:ocelot": [
+    "se_hot_ocelot"
+  ],
+  "minecraft:panda": [
+    "se_hot_panda"
+  ],
+  "minecraft:parrot": [
+    "se_hot_parrot"
+  ],
+  "minecraft:pig": [
+    "se_hot_pig",
+    "se_temperate_pig"
+  ],
+  "minecraft:rabbit": [
+    "se_cold_rabbit",
+    "se_temperate_rabbit"
+  ],
+  "minecraft:sheep": [
+    "se_cold_sheep",
+    "se_temperate_sheep"
+  ],
+  "minecraft:turtle": [
+    "se_hot_turtle"
+  ],
+  "minecraft:wolf": [
+    "se_cold_wolf",
+    "se_temperate_wolf"
+  ]
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sieged Empires</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-background" aria-hidden="true">
+      <video
+        id="app-background-video"
+        class="app-background-media"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+      >
+        <source src="../assets/background.webm" type="video/webm" />
+      </video>
+    </div>
+
+    <div class="app-columns">
+      <main class="shell launcher-column">
+        <header class="brand">
+          <p id="app-version" class="app-version" aria-label="Launcher version">1.0.0</p>
+          <img class="logo" src="../assets/icon-transparent.png" alt="Sieged Empires" />
+          <h1>Sieged Empires</h1>
+          <p id="tagline" class="tagline">Sign in, then press Play.</p>
+        </header>
+
+        <section class="panel">
+          <div id="account-list" class="account-list"></div>
+          <p id="user-line" class="user hidden"></p>
+
+          <div id="login-actions" class="login-actions">
+            <button id="btn-login" type="button" class="btn primary">Sign in with Microsoft</button>
+            <button id="btn-login-browser" type="button" class="btn ghost">Sign in with browser</button>
+          </div>
+
+          <div id="progress-wrap" class="progress-wrap hidden">
+            <p id="progress-pct" class="progress-pct">0%</p>
+            <div class="progress-track">
+              <div id="progress-bar" class="progress-fill"></div>
+            </div>
+            <p id="progress-note" class="progress-note">Installing pack…</p>
+          </div>
+
+          <p id="first-play-hint" class="first-play-hint hidden" role="status">
+            Some users may have to re-launch after the first time, due to text errors. If you see any, restart your game.
+          </p>
+
+          <button id="btn-play" type="button" class="btn play">Play</button>
+          <button id="btn-logout" type="button" class="btn ghost">Sign out</button>
+          <button id="btn-add-account" type="button" class="btn ghost hidden">Add another account</button>
+
+          <button id="btn-discord" type="button" class="link-action">Join our Discord!</button>
+          <button id="btn-website" type="button" class="link-action">Visit our Website!</button>
+
+          <p class="disclosure">Login stays on this computer only.</p>
+          <p id="outdated-warning" class="outdated-warning hidden" role="alert">
+            You are using an Outdated version! Install the Latest Update!
+          </p>
+        </section>
+
+        <div class="footer-status">
+          <p id="status" class="status" aria-live="polite"></p>
+          <button
+            id="btn-download-latest"
+            type="button"
+            class="download-latest-link hidden"
+          >
+            Download Latest Version
+          </button>
+        </div>
+      </main>
+
+      <aside class="shell news-column" aria-label="Latest Newsletter">
+        <header class="brand news-brand">
+          <h1>Latest Newsletter!</h1>
+        </header>
+        <div
+          id="news-content"
+          class="news-box"
+          role="region"
+          aria-label="Latest newsletter"
+        >
+          <p class="news-muted">Loading newsletter…</p>
+        </div>
+      </aside>
+    </div>
+    <script src="renderer.js"></script>
+  </body>
+</html>

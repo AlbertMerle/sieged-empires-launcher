@@ -1,0 +1,60 @@
+# Copy this file to:  <repo>/.github/workflows/macos-unsigned.yml
+# Requires the repo to include the installer/ tree (or adjust paths).
+#
+# Tools used (GitHub-hosted):
+#   - actions/checkout
+#   - actions/setup-node
+#   - runs-on: macos-latest   ← real Mac VM; Linux cannot replace this
+#   - electron-builder --mac (via npm run dist:mac)
+#   - CSC_IDENTITY_AUTO_DISCOVERY=false
+#   - actions/upload-artifact
+#
+# Refs (community / electron-builder):
+#   - identity: null + CSC_IDENTITY_AUTO_DISCOVERY=false for unsigned
+#   - hardenedRuntime: false for unsigned EB 26 (crash if true + no cert)
+
+name: macOS unsigned installer
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: macos-unsigned-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: unsigned dmg + zip
+    runs-on: macos-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: installer
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: installer/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Package (unsigned)
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npm run dist:mac
+
+      - name: Checksums
+        run: shasum -a 256 MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sieged-empires-mac-unsigned
+          path: |
+            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
+            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
+          retention-days: 14
+          if-no-files-found: error

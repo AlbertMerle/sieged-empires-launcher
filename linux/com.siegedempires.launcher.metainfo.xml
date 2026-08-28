@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.siegedempires.launcher</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <name>Sieged Empires</name>
+  <summary>Sieged Empires launcher</summary>
+  <description>
+    <p>
+      Sieged Empires is a Fabric Minecraft modpack launcher for the public Sieged Empires
+      server. Install the pack, keep mods up to date from the official CDN, and launch
+      Minecraft with the correct Java runtime.
+    </p>
+    <p>
+      The launcher downloads third-party mods and Sieged Empires overrides, then exits after
+      starting the game so Minecraft keeps running independently.
+    </p>
+  </description>
+  <launchable type="desktop-id">sieged-empires.desktop</launchable>
+  <icon type="stock">sieged-empires</icon>
+  <url type="homepage">https://siegedempires.com</url>
+  <developer id="com.siegedempires">
+    <name>Sieged Empires</name>
+  </developer>
+  <content_rating type="oars-1.1"/>
+  <categories>
+    <category>Game</category>
+  </categories>
+  <releases>
+    <release version="1.0.0" date="2026-08-27">
+      <description>
+        <p>Initial public launcher release for Linux.</p>
+      </description>
+    </release>
+  </releases>
+</component>

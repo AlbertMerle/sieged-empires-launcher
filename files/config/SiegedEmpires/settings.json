@@ -1,0 +1,16 @@
+{
+  "lockpick_duration_seconds": 30,
+  "lockpick_success_percent": 5,
+  "lockpick-min-other-online": 2,
+  "vanilla-boat-health": 30.0,
+  "non-citizen-pvp-cooldown": 30,
+  "invasion-min-online-players": 3,
+  "invasion-duration-seconds": 1200,
+  "invasion-cooldown-seconds": 3600,
+  "war-banner-health": 120,
+  "invasion-price": 8,
+  "create-town-cost": 5,
+  "world-scale-book": "1:60",
+  "join-button-ip": "147.135.31.41",
+  "join-button-ip-url": ""
+}

@@ -1,0 +1,51 @@
+# Windows Sieged Empires MSI Installer (.msi)
+# Builds the native Windows MSI installer using electron-builder on a Windows runner.
+# Drops ImmediatelyFast for Windows to prevent font glyph corruption.
+
+name: Windows MSI Installer
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: windows-msi-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Windows MSI Installer (.msi)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Windows MSI Installer
+        run: npm run dist:win
+
+      - name: Calculate Checksums
+        shell: pwsh
+        run: |
+          Get-FileHash windows/WindowsSetup/Sieged-Empires-*-Windows.msi -Algorithm SHA256 | Format-List
+          Get-FileHash windows/WindowsSetup/Sieged-Empires-*-Windows.msi -Algorithm SHA1 | Format-List
+
+      - name: Upload MSI Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sieged-empires-windows-msi
+          path: windows/WindowsSetup/Sieged-Empires-*-Windows.msi
+          retention-days: 14
+          if-no-files-found: error

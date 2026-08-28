@@ -1,0 +1,47 @@
+{
+  "name": "sieged-empires",
+  "productName": "sieged-empires",
+  "desktopName": "Sieged Empires",
+  "version": "1.0.0",
+  "description": "Sieged Empires launcher — install pack and play Minecraft",
+  "author": {
+    "name": "Sieged Empires",
+    "email": "siegedempires@users.noreply.github.com"
+  },
+  "homepage": "https://siegedempires.com",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "app/src/main.js",
+  "scripts": {
+    "prepare:files": "node scripts/prepare-files.js",
+    "prepare:background": "node scripts/prepare-background.js",
+    "prepare:icon": "node scripts/prepare-icon.js",
+    "prepare:pack": "npm run prepare:files && npm run prepare:background && npm run prepare:icon && node scripts/prepare-pack.js",
+    "generate:macos-manifest": "node scripts/generate-macos-manifest.js",
+    "generate:windows-manifest": "node scripts/generate-windows-manifest.js",
+    "prepare:pack:mac": "npm run generate:macos-manifest && npm run prepare:files && npm run prepare:background && npm run prepare:icon && SE_PACK_PLATFORM=mac node scripts/prepare-pack.js",
+    "prepare:pack:mac-legacy": "npm run prepare:pack:mac",
+    "prepare:pack:win": "npm run generate:windows-manifest && npm run prepare:files && npm run prepare:background && npm run prepare:icon && SE_PACK_PLATFORM=win node scripts/prepare-pack.js",
+    "start": "ELECTRON_DISABLE_SANDBOX=1 electron app/src/main.js",
+    "start:app": "ELECTRON_DISABLE_SANDBOX=1 electron app/src/main.js",
+    "dist:linux": "npm run prepare:pack && electron-builder --linux deb --config linux/setup-builder.json",
+    "dist:win": "npm run prepare:pack:win && electron-builder --win msi --config windows/setup-builder.json",
+    "dist:win:msi": "npm run prepare:pack:win && electron-builder --win msi --config windows/setup-builder.json",
+    "dist:win:zip": "npm run prepare:pack:win && electron-builder --win zip --config windows/setup-builder.json",
+    "dist:win:dir": "npm run prepare:pack:win && electron-builder --win dir --config windows/setup-builder.json",
+    "dist:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false npm run prepare:pack:mac && electron-builder --mac dmg zip --config MacOS/setup-builder.json",
+    "dist:mac:zip": "CSC_IDENTITY_AUTO_DISCOVERY=false npm run prepare:pack:mac && electron-builder --mac zip --config MacOS/setup-builder.json",
+    "dist:mac:script": "bash scripts/build-mac-unsigned.sh",
+    "dist": "npm run dist:linux && npm run dist:win"
+  },
+  "dependencies": {
+    "minecraft-launcher-core": "^3.18.2",
+    "msmc": "^5.0.5"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12",
+    "jpeg-js": "^0.4.4",
+    "pngjs": "^7.0.0"
+  }
+}

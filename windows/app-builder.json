@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "com.siegedempires.launcher",
+  "productName": "Sieged Empires",
+  "main": "app/src/main.js",
+  "directories": {
+    "output": "windows/dist/app",
+    "buildResources": "assets"
+  },
+  "files": [
+    "app/src/**/*",
+    "app/ui/**/*",
+    "app/assets/**/*",
+    "app/config.json",
+    "package.json",
+    "node_modules/minecraft-launcher-core/**/*",
+    "node_modules/msmc/**/*"
+  ],
+  "win": {
+    "target": ["dir"],
+    "icon": "assets/icon.ico",
+    "executableName": "Sieged Empires"
+  }
+}

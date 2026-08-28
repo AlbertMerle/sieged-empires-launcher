@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "enableSodiumMenu": true,
+  "dontCull": [],
+  "signTextCulling": true,
+  "rainCulling": true,
+  "useBlockStateCulling": true,
+  "useCustomItemFrameRenderer": true,
+  "itemFrameMapCulling": true,
+  "useItemFrameLOD": true,
+  "itemFrameLODRange": 48,
+  "useItemFrame3FaceCulling": true,
+  "itemFrame3FaceCullingRange": 4.0,
+  "paintingCulling": true,
+  "leavesCullingMode": "DEPTH",
+  "leavesCullingAmount": 2,
+  "includeMangroveRoots": true,
+  "endGatewayCulling": true,
+  "useOnModdedBlocksByDefault": true,
+  "modCompatibility": {
+    "minecraft": true
+  }
+}

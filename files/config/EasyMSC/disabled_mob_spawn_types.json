@@ -1,0 +1,128 @@
+{
+  "JOCKEY": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "PATROL": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "MOB_SUMMONED": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "TRIAL_SPAWNER": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "NATURAL": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "EVENT": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "BREEDING": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "DISPENSER": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "TRIGGERED": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "CHUNK_GENERATION": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "LOAD": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "BUCKET": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "STRUCTURE": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "SPAWN_ITEM_USE": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "DIMENSION_TRAVEL": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "CONVERSION": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "COMMAND": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ],
+  "REINFORCEMENT": [
+    "minecraft:cave_spider",
+    "minecraft:skeleton",
+    "minecraft:enderman",
+    "minecraft:spider",
+    "minecraft:creeper"
+  ]
+}

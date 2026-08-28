@@ -1,0 +1,65 @@
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "com.siegedempires.launcher",
+  "productName": "sieged-empires",
+  "executableName": "sieged-empires",
+  "extraMetadata": {
+    "name": "sieged-empires",
+    "productName": "sieged-empires",
+    "main": "app/src/main.js",
+    "homepage": "https://siegedempires.com",
+    "author": {
+      "name": "Sieged Empires",
+      "email": "siegedempires@users.noreply.github.com"
+    }
+  },
+  "directories": {
+    "output": "linux/LinuxSetup",
+    "buildResources": "assets"
+  },
+  "files": [
+    "app/**/*",
+    "lib/*.js",
+    "assets/icon.png",
+    "assets/icon-transparent.png",
+    "package.json"
+  ],
+  "extraResources": [
+    { "from": "pack-payload", "to": "pack" },
+    { "from": "files/manifest.json", "to": "files/manifest.json" },
+    { "from": "files/mods", "to": "files/mods" },
+    { "from": "files/resourcepacks", "to": "files/resourcepacks" },
+    { "from": "assets/icon-transparent.png", "to": "assets/icon-transparent.png" },
+    { "from": "assets/icon-transparent.png", "to": "assets/icon.png" }
+  ],
+  "linux": {
+    "target": ["deb"],
+    "category": "Game",
+    "icon": "assets/icon-transparent.png",
+    "executableName": "sieged-empires",
+    "executableArgs": ["--no-sandbox"],
+    "maintainer": "Sieged Empires <siegedempires@users.noreply.github.com>",
+    "synopsis": "Sieged Empires",
+    "description": "Sieged Empires launcher",
+    "artifactName": "SiegedEmpires-${version}-linux.${ext}",
+    "desktop": {
+      "entry": {
+        "Name": "Sieged Empires",
+        "GenericName": "Sieged Empires",
+        "Comment": "Sieged Empires launcher",
+        "Categories": "Game;",
+        "StartupWMClass": "Sieged Empires"
+      }
+    }
+  },
+  "deb": {
+    "packageName": "sieged-empires",
+    "afterInstall": "linux/after-install.sh",
+    "fpm": [
+      "--replaces", "sieged-empires-launcher",
+      "--conflicts", "sieged-empires-launcher",
+      "--provides", "sieged-empires",
+      "linux/com.siegedempires.launcher.metainfo.xml=/usr/share/metainfo/com.siegedempires.launcher.metainfo.xml"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "appName": "Sieged Empires",
+  "minecraftVersion": "26.2",
+  "fabricLoaderVersion": "0.19.3",
+  "azure": {
+    "clientId": ""
+  },
+  "memory": {
+    "min": "2048",
+    "max": "4096"
+  }
+}

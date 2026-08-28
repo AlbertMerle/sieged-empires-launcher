@@ -1,0 +1,115 @@
+{
+  "_readme": "Soil growth percents are relative to vanilla farmland (100 = full vanilla on that soil). crop_growth_rate is a global multiplier stacked with soil % for CropBlock crops (e.g. sand_growth_percent 5 × crop_growth_rate 50 → 2.5% of vanilla). crop_growth_rate also scales pumpkin/melon/cantelope stems, sugar cane, cocoa, sweet berries, and saplings. Bonemeal success chance matches crop_growth_rate (item still consumed on failure → 50% needs ~2× bonemeal). Growth bands (overlapping): cold ≤ cold_crop_max_temperature; temperate between temperate_crop_min/max; tropical between tropical_crop_min/max. Serene Seasons: winter_growth_percent (default 30), dry_season_growth_percent (default 70). Desert/badlands: cactus/coffee/pepper/cantelope grow freely; other tropical crops need water within 2 blocks and grow at desert_irrigated_growth_percent (default 30); cold/temperate rot. crop_climates maps block ids to allowed climate bands. natural_crop_generation enables wild crop patches by biome category. natural_fruit_tree_generation enables peach/lemon/banana in terrain (default true). peach/lemon/banana_tree_chunks_per_spawn = deterministic 1-in-N eligible chunks (default 30; 0 = off that tree). Peach/lemon: not plains, temp < temperate max; banana: jungle only, temp > temperate max. Needs new chunks after changes. Saplings still grow.",
+  "farmland_growth_percent": 100,
+  "dirt_growth_percent": 25,
+  "grass_block_growth_percent": 25,
+  "coarse_dirt_growth_percent": 15,
+  "sand_growth_percent": 15,
+  "water_bonus_percent": 10,
+  "crop_growth_rate": 33,
+  "natural_crop_generation": true,
+  "natural_fruit_tree_generation": true,
+  "peach_tree_chunks_per_spawn": 30,
+  "lemon_tree_chunks_per_spawn": 30,
+  "banana_tree_chunks_per_spawn": 30,
+  "temperature_checks": true,
+  "cold_crop_max_temperature": 0.5,
+  "temperate_crop_min_temperature": 0.4,
+  "temperate_crop_max_temperature": 0.8,
+  "tropical_crop_min_temperature": 0.75,
+  "tropical_crop_max_temperature": 1.9,
+  "winter_growth_percent": 40,
+  "dry_season_growth_percent": 60,
+  "desert_irrigated_growth_percent": 40,
+  "crop_climates": {
+    "minecraft:wheat": [
+      "cold",
+      "temperate"
+    ],
+    "minecraft:carrots": [
+      "cold",
+      "temperate"
+    ],
+    "minecraft:potatoes": [
+      "temperate"
+    ],
+    "minecraft:beetroots": [
+      "cold",
+      "temperate"
+    ],
+    "minecraft:sweet_berry_bush": [
+      "cold"
+    ],
+    "minecraft:melon_stem": [
+      "tropical"
+    ],
+    "minecraft:pumpkin_stem": [
+      "temperate",
+      "tropical"
+    ],
+    "minecraft:sugar_cane": [
+      "tropical"
+    ],
+    "minecraft:cocoa": [
+      "tropical"
+    ],
+    "minecraft:cactus": [
+      "tropical"
+    ],
+    "croplite:oats_crop": [
+      "temperate"
+    ],
+    "croplite:beans_crop": [
+      "temperate",
+      "tropical"
+    ],
+    "croplite:rice_crop": [
+      "tropical"
+    ],
+    "croplite:tomato_crop": [
+      "tropical"
+    ],
+    "croplite:pepper_crop": [
+      "tropical"
+    ],
+    "croplite:eggplant_crop": [
+      "tropical"
+    ],
+    "croplite:cucumber_crop": [
+      "tropical"
+    ],
+    "croplite:sweet_potato_crop": [
+      "tropical"
+    ],
+    "croplite:cantelope_stem": [
+      "temperate",
+      "tropical"
+    ],
+    "croplite:attached_cantelope_stem": [
+      "temperate",
+      "tropical"
+    ],
+    "croplite:coffee_crop": [
+      "tropical"
+    ],
+    "croplite:garlic_crop": [
+      "cold",
+      "temperate"
+    ],
+    "croplite:peach_sapling": [
+      "cold",
+      "temperate"
+    ],
+    "croplite:lemon_sapling": [
+      "temperate",
+      "tropical"
+    ],
+    "croplite:banana_sapling": [
+      "tropical"
+    ],
+    "croplite:basil_crop": [
+      "temperate",
+      "tropical"
+    ]
+  }
+}

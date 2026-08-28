@@ -1,0 +1,12 @@
+{
+  "solid_metal_cannonball_base_damage": 20,
+  "stone_cannonball_base_damage": 10,
+  "incendiary_cannonball_base_damage": 16,
+  "solid_metal_cannonball_base_speed": 3.0,
+  "stone_cannonball_base_speed": 3.0,
+  "incendiary_cannonball_base_speed": 3.0,
+  "solid_metal_cannonball_perforation": 10.0,
+  "stone_cannonball_perforation": 5.0,
+  "incendiary_cannonball_perforation": 5.0,
+  "reload_time": 60
+}

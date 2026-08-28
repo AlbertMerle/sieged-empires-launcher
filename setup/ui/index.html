@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sieged Empires Setup</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img class="logo" src="../../assets/icon-transparent.png" alt="Sieged Empires" />
+        <h1>Sieged Empires</h1>
+      </header>
+
+      <section id="panel-welcome" class="panel">
+        <p id="welcome-text" class="hint">Checking for updates…</p>
+        <p class="question">Download Sieged Empires?</p>
+        <div class="row">
+          <button id="btn-yes" type="button" class="btn primary">Yes</button>
+          <button id="btn-no" type="button" class="btn ghost">No</button>
+        </div>
+      </section>
+
+      <section id="panel-path" class="panel hidden">
+        <p class="hint">Choose where to install the modpack and launcher.</p>
+        <label class="field-label" for="install-path">Install folder</label>
+        <div class="path-row">
+          <input id="install-path" type="text" class="path-input" spellcheck="false" />
+          <button id="btn-browse" type="button" class="btn ghost">Browse</button>
+        </div>
+        <button id="btn-install" type="button" class="btn primary">Install / Update</button>
+        <button id="btn-back" type="button" class="btn ghost">Back</button>
+      </section>
+
+      <section id="panel-progress" class="panel hidden">
+        <p id="progress-pct" class="progress-pct" aria-live="polite">0%</p>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-bar" class="progress-fill"></div>
+        </div>
+        <p id="progress-note" class="progress-note">Downloading Mods from Official Websites...</p>
+      </section>
+
+      <section id="panel-done" class="panel hidden">
+        <p class="done-title">Done!</p>
+        <p class="hint">Sieged Empires is installed and ready.</p>
+        <p class="question">Launch Sieged Empires?</p>
+        <div class="row">
+          <button id="btn-launch" type="button" class="btn play">Launch</button>
+          <button id="btn-finish" type="button" class="btn ghost">Not now</button>
+        </div>
+      </section>
+
+      <p id="status" class="status" aria-live="polite"></p>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>

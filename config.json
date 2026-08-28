@@ -1,0 +1,28 @@
+{
+  "appName": "Sieged Empires",
+  "minecraftVersion": "26.2",
+  "fabricLoaderVersion": "",
+  "pageDownload": "modrinth",
+  "pageDownloadComment": "Which platform Play uses for pack updates: \"modrinth\" or \"curseforge\". Both blocks can be filled; only the selected one is used. Default: modrinth (no API key).",
+  "modrinth": {
+    "projectId": "",
+    "projectSlug": "sieged-empires",
+    "comment": "Active host. Paste projectId when Modrinth approves the pack. Slug guessed as sieged-empires — change if the live slug differs."
+  },
+  "curseforge": {
+    "projectId": "",
+    "projectSlug": "sieged-empires",
+    "projectUrl": "https://www.curseforge.com/minecraft/modpacks/sieged-empires",
+    "apiKey": "",
+    "comment": "Unused while pageDownload is modrinth. Kept for optional later. API key via secrets.json if ever enabled."
+  },
+  "azure": {
+    "clientId": "",
+    "comment": "Azure Entra app Application (client) ID. Required for production MS login. See README Microsoft Auth section. Until set, msmc uses its default public client where available."
+  },
+  "gameDirName": "sieged-empires",
+  "memory": {
+    "min": "2048",
+    "max": "4096"
+  }
+}

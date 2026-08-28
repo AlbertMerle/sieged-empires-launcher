@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sieged Empires</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <img class="logo" src="../assets/icon.png" alt="Sieged Empires" />
+        <h1>Sieged Empires</h1>
+      </header>
+
+      <section id="login-panel" class="panel">
+        <p class="hint">Sign in with your Microsoft account to play.</p>
+        <button id="btn-login" type="button" class="btn primary">Sign in with Microsoft</button>
+      </section>
+
+      <section id="play-panel" class="panel hidden">
+        <p id="user-line" class="user"></p>
+        <button id="btn-logout" type="button" class="btn ghost">Sign out</button>
+        <button id="btn-play" type="button" class="btn play">Play</button>
+      </section>
+
+      <p id="status" class="status" aria-live="polite"></p>
+      <p id="meta" class="meta"></p>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>
