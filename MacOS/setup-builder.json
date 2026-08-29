@@ -34,7 +34,6 @@
   ],
   "mac": {
     "target": [
-      { "target": "zip", "arch": ["universal"] },
       { "target": "dmg", "arch": ["universal"] }
     ],
     "category": "public.app-category.games",
@@ -47,7 +46,15 @@
     "electronLanguages": ["en"]
   },
   "dmg": {
-    "title": "Sieged Empires",
-    "sign": false
+    "title": "Sieged Empires ${version}",
+    "sign": false,
+    "window": {
+      "width": 540,
+      "height": 380
+    },
+    "contents": [
+      { "x": 130, "y": 220 },
+      { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+    ]
   }
 }

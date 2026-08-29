@@ -1,5 +1,5 @@
 # Multi-Platform Installer Builder
-# Builds Linux (.deb), macOS (.dmg + .zip), and Windows (.msi)
+# Builds Linux (.deb), macOS (.dmg), and Windows (.msi)
 
 name: Build All Installers
 
@@ -30,9 +30,9 @@ jobs:
           path: linux/LinuxSetup/SiegedEmpires-*-linux.deb
 
   build-mac:
-    name: macOS (.dmg + .zip)
+    name: macOS (.dmg)
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,23 +44,20 @@ jobs:
       - env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: npm run dist:mac
-      - name: Ad-hoc sign + bundle launch helper
+      - name: Ad-hoc sign app bundle
         run: |
-          APP="MacOS/MacOSSetup/mac/Sieged Empires.app"
-          if [ -d "$APP" ]; then
-            codesign --force --deep --sign - "$APP" || true
-            lipo -info "$APP/Contents/MacOS/Sieged Empires" || file "$APP/Contents/MacOS/Sieged Empires"
+          APP="MacOS/MacOSSetup/mac-universal/Sieged Empires.app"
+          if [ ! -d "$APP" ]; then
+            APP="MacOS/MacOSSetup/mac/Sieged Empires.app"
           fi
-          chmod +x "MacOS/Launch Sieged Empires.command"
-          for z in MacOS/MacOSSetup/SiegedEmpires-*-mac.zip; do
-            [ -f "$z" ] && zip -j -u "$z" "MacOS/Launch Sieged Empires.command" || true
-          done
+          if [ -d "$APP" ]; then
+            chmod +x scripts/sign-mac-app.sh
+            bash scripts/sign-mac-app.sh "$APP"
+          fi
       - uses: actions/upload-artifact@v4
         with:
-          name: sieged-empires-mac-universal
-          path: |
-            MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
-            MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
+          name: sieged-empires-mac-dmg
+          path: MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
 
   build-windows:
     name: Windows (.msi)

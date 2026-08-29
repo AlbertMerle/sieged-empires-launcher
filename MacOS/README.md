@@ -2,7 +2,7 @@
 
 | Path | Contents |
 |------|----------|
-| `MacOS/MacOSSetup/` | `SiegedEmpires-*-mac.dmg` / `.zip` after build |
+| `MacOS/MacOSSetup/` | `SiegedEmpires-*-mac.dmg` after build |
 | `FRIEND-ONE-SHOT.md` | One-shot build + Gatekeeper open for a Mac friend |
 | `github-actions-macos-unsigned.yml` | Copy to `.github/workflows/` when the project is on GitHub |
 
@@ -18,11 +18,11 @@ Legacy Mac-only manifest (Distant Horizons instead of Voxy) lives under `MacOS/f
 
 | Command | Where | Output |
 |---------|-------|--------|
-| `npm run dist:mac` | **macOS only** | `.dmg` + `.zip` |
-| `npm run dist:mac:zip` | Linux or macOS | `.zip` (`.app` inside) |
-| `./scripts/build-mac-unsigned.sh` | macOS | `.dmg` + `.zip` |
+| `npm run dist:mac` | **macOS only** | universal `.dmg` |
+| `npm run dist:mac:zip` | Linux or macOS | Intel-only `.zip` (dev; not for Apple Silicon release) |
+| `./scripts/build-mac-unsigned.sh` | macOS | universal `.dmg` |
 
-On **Linux**, `dist:mac` fails at DMG creation (`sips` is macOS-only). Use **`npm run dist:mac:zip`** — the zip is a full unsigned Mac app and works for distribution (unzip → drag to Applications).
+On **Linux**, `dist:mac` fails at DMG creation (`sips` is macOS-only). Ship Mac releases via **GitHub Actions `macos-unsigned.yml`** or a Mac friend running `build-mac-unsigned.sh`.
 
 ### Tools (electron-builder)
 
