@@ -44,16 +44,15 @@ jobs:
       - env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: npm run dist:mac
-      - name: Ad-hoc sign app bundle
+      - name: Verify ad-hoc signing inside shipped DMG
         run: |
-          APP="MacOS/MacOSSetup/mac-universal/Sieged Empires.app"
-          if [ ! -d "$APP" ]; then
-            APP="MacOS/MacOSSetup/mac/Sieged Empires.app"
-          fi
-          if [ -d "$APP" ]; then
-            chmod +x scripts/sign-mac-app.sh
-            bash scripts/sign-mac-app.sh "$APP"
-          fi
+          DMG=$(ls MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg)
+          MOUNT=$(hdiutil attach "$DMG" -nobrowse -readonly | grep -o '/Volumes/.*' | head -1)
+          APP="$MOUNT/Sieged Empires.app"
+          test -d "$APP"
+          codesign --verify --deep --strict "$APP"
+          echo "codesign verify: OK (app inside shipped DMG)"
+          hdiutil detach "$MOUNT"
       - uses: actions/upload-artifact@v4
         with:
           name: sieged-empires-mac-dmg

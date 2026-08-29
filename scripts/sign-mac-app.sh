@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Ad-hoc sign an unsigned Electron .app (inside-out) so macOS Gatekeeper is less hostile.
+# Manual inside-out ad-hoc sign for a prepackaged .app (Option B / recovery only).
+# Normal releases use identity "-" in MacOS/setup-builder.json — electron-builder signs before DMG.
 set -euo pipefail
 
 APP="${1:?Usage: sign-mac-app.sh path/to/App.app}"

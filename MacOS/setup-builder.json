@@ -39,7 +39,7 @@
     "category": "public.app-category.games",
     "icon": "assets/icon.png",
     "artifactName": "SiegedEmpires-${version}-mac.${ext}",
-    "identity": null,
+    "identity": "-",
     "hardenedRuntime": false,
     "gatekeeperAssess": false,
     "notarize": false,

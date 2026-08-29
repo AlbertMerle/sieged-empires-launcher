@@ -1,6 +1,6 @@
 # Friend one-shot — build Sieged Empires `.dmg` on Mac
 
-You only need this once. No Apple Developer account. No signing.
+You only need this once. No Apple Developer account. Ad-hoc signed (not notarized).
 
 ## Tools
 
@@ -9,10 +9,10 @@ You only need this once. No Apple Developer account. No signing.
 | **Node.js 20+** | Run npm / electron-builder |
 | **electron-builder** (in `package.json`) | Packages the Electron launcher into a `.dmg` |
 | **A real Mac** | Required for darwin binaries (your Mac, a friend's, or GitHub `macos-latest`) |
-| **`CSC_IDENTITY_AUTO_DISCOVERY=false`** | Skip looking for a signing cert |
-| **`mac.identity: null`** | Unsigned build (in `setup-builder.json`) |
+| **`CSC_IDENTITY_AUTO_DISCOVERY=false`** | Do not accidentally pick up a real signing cert |
+| **`mac.identity: "-"`** | Ad-hoc sign during pack (before DMG) — in `setup-builder.json` |
 
-You do **not** need Xcode for an unsigned friend build.
+You do **not** need Xcode for an ad-hoc friend build.
 
 ## On the Mac (build)
 
@@ -22,7 +22,7 @@ You do **not** need Xcode for an unsigned friend build.
 
 ```bash
 cd /path/to/installer
-chmod +x scripts/build-mac-unsigned.sh scripts/sign-mac-app.sh
+chmod +x scripts/build-mac-unsigned.sh
 ./scripts/build-mac-unsigned.sh
 ```
 
@@ -32,7 +32,7 @@ chmod +x scripts/build-mac-unsigned.sh scripts/sign-mac-app.sh
 
 1. Open the `.dmg`
 2. Drag **Sieged Empires** to **Applications**
-3. **First launch:** right-click the app → **Open** → **Open** (bypasses Gatekeeper for unsigned apps)
+3. **First launch:** right-click the app → **Open** → **Open** (bypasses Gatekeeper for ad-hoc signed apps)
 4. After the first successful launch, double-click works normally
 
 If it still says “damaged”: System Settings → Privacy & Security → **Open Anyway**, or:

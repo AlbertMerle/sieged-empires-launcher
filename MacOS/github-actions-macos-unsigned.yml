@@ -6,12 +6,13 @@
 #   - actions/setup-node
 #   - runs-on: macos-latest   ← real Mac VM; Linux cannot replace this
 #   - electron-builder --mac (via npm run dist:mac)
-#   - CSC_IDENTITY_AUTO_DISCOVERY=false
+#   - mac.identity: "-" (ad-hoc sign during pack, before DMG)
+#   - CSC_IDENTITY_AUTO_DISCOVERY=false (do not pick up a real cert by accident)
 #   - actions/upload-artifact
 #
 # Refs (community / electron-builder):
-#   - identity: null + CSC_IDENTITY_AUTO_DISCOVERY=false for unsigned
-#   - hardenedRuntime: false for unsigned EB 26 (crash if true + no cert)
+#   - identity: "-" + hardenedRuntime: false for ad-hoc friend builds
+#   - identity: null skips signing entirely — do NOT use for release DMGs
 
 name: macOS unsigned installer
 
@@ -24,7 +25,7 @@ concurrency:
 
 jobs:
   build:
-    name: unsigned dmg + zip
+    name: ad-hoc signed universal dmg
     runs-on: macos-latest
     timeout-minutes: 45
     defaults:
@@ -42,19 +43,28 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Package (unsigned)
+      - name: Package (ad-hoc signed dmg)
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: npm run dist:mac
 
+      - name: Verify ad-hoc signing inside shipped DMG
+        run: |
+          DMG=$(ls MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg)
+          MOUNT=$(hdiutil attach "$DMG" -nobrowse -readonly | grep -o '/Volumes/.*' | head -1)
+          APP="$MOUNT/Sieged Empires.app"
+          test -d "$APP"
+          codesign --verify --deep --strict "$APP"
+          echo "codesign verify: OK (app inside shipped DMG)"
+          hdiutil detach "$MOUNT"
+
       - name: Checksums
-        run: shasum -a 256 MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
+        run: shasum -a 256 MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
 
       - uses: actions/upload-artifact@v4
         with:
-          name: sieged-empires-mac-unsigned
+          name: sieged-empires-mac-dmg
           path: |
             installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
-            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
           retention-days: 14
           if-no-files-found: error

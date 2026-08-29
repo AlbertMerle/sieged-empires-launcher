@@ -29,8 +29,8 @@ On **Linux**, `dist:mac` fails at DMG creation (`sips` is macOS-only). Ship Mac 
 | Need | Tool |
 |------|------|
 | Package `.app` + `.dmg` | `electron-builder` (v26 in `package.json`) |
-| Skip signing (friend test) | `CSC_IDENTITY_AUTO_DISCOVERY=false` + `"identity": null` |
-| Avoid unsigned crash on EB 26 | `"hardenedRuntime": false` |
+| Skip ad-hoc signing (friend test) | `CSC_IDENTITY_AUTO_DISCOVERY=false` + `"identity": "-"` in `setup-builder.json` |
+| Avoid ad-hoc crash on EB 26 | `"hardenedRuntime": false` (required with identity `"-"`) |
 | Free Mac build VM | GitHub Actions `macos-latest` |
 | Cert later (public ship) | Apple Developer ID + `CSC_LINK` / notarize env vars |
 

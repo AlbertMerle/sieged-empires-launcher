@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Unsigned macOS build — run on a Mac only (friend machine or GitHub Actions macos-*).
-# Produces a universal (Intel + Apple Silicon) .dmg drag-to-Applications installer.
+# Ad-hoc signed macOS build — run on a Mac only (friend machine or GitHub Actions macos-*).
+# electron-builder signs the .app during pack (identity "-"), then wraps it in a universal .dmg.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -18,12 +18,15 @@ fi
 
 npm run dist:mac
 
-APP_GLOB="MacOS/MacOSSetup/mac-universal/Sieged Empires.app"
-if [[ ! -d "$APP_GLOB" ]]; then
-  APP_GLOB="MacOS/MacOSSetup/mac/Sieged Empires.app"
-fi
-if [[ -d "$APP_GLOB" ]]; then
-  bash scripts/sign-mac-app.sh "$APP_GLOB"
+DMG=$(ls MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg 2>/dev/null | head -1)
+if [[ -n "$DMG" ]]; then
+  MOUNT=$(hdiutil attach "$DMG" -nobrowse -readonly | grep -o '/Volumes/.*' | head -1)
+  APP="$MOUNT/Sieged Empires.app"
+  if [[ -d "$APP" ]]; then
+    codesign --verify --deep --strict "$APP"
+    echo "codesign verify: OK (app inside shipped DMG)"
+  fi
+  hdiutil detach "$MOUNT" 2>/dev/null || true
 fi
 
 echo ""
@@ -31,4 +34,4 @@ echo "Done. Artifacts:"
 ls -la MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg 2>/dev/null || ls -la MacOS/MacOSSetup/
 echo ""
 echo "Install: open the .dmg → drag Sieged Empires to Applications."
-echo "First launch (unsigned): right-click the app → Open → Open."
+echo "First launch (ad-hoc signed): right-click the app → Open → Open."
