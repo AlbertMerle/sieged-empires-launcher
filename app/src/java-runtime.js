@@ -437,6 +437,15 @@ async function installJavaViaAdoptium(onProgress) {
     /* ignore */
   }
 
+  // Gatekeeper quarantine on downloaded binaries blocks spawn from Electron on macOS.
+  if (process.platform === 'darwin') {
+    try {
+      await execFileAsync('xattr', ['-cr', finalRoot]);
+    } catch {
+      /* optional — user may need to allow Java in Privacy & Security */
+    }
+  }
+
   const verified = await findJavaInTree(finalRoot);
   if (!verified) {
     throw new Error('Downloaded Java 25 JRE but could not find java binary.');

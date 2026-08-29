@@ -208,7 +208,11 @@ function waitUntilMinecraftOpened(pid, gameRoot, onEvent) {
         return;
       }
       if (Date.now() - startedAt > maxMs) {
-        finish();
+        finish(
+          new Error(
+            'Minecraft did not open within 60 seconds. Check logs/latest.log in your install folder.'
+          )
+        );
       }
     }, 250);
   });
@@ -473,6 +477,11 @@ async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
     return spawnDetachedMinecraft(javaPath, launchArguments, gameRoot);
   };
 
+  // MCLC only adds -XstartOnFirstThread when parseInt(version.split('.')[1]) > 12.
+  // MC 26.x has minor segment "2", so macOS launches without it and GLFW never opens a window.
+  const customArgs =
+    process.platform === 'darwin' ? ['-XstartOnFirstThread'] : undefined;
+
   let child;
   try {
     child = await launcher.launch({
@@ -488,6 +497,7 @@ async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
         min: cfg.memory?.min || '2048',
       },
       javaPath,
+      customArgs,
       overrides: {
         detached: true,
       },
