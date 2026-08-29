@@ -13,6 +13,55 @@ body {
   overflow: hidden;
 }
 
+.app-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.launcher-update-banner {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 10px 16px;
+  text-align: center;
+  color: #fff;
+  background: #8b1515;
+  border-bottom: 2px solid #ff4444;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.45;
+  z-index: 2;
+}
+
+.launcher-update-banner.hidden {
+  display: none;
+}
+
+.launcher-update-banner-text {
+  display: inline;
+}
+
+.launcher-update-here {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.launcher-update-here:hover,
+.launcher-update-here:focus-visible {
+  color: #ffd0d0;
+  outline: none;
+}
+
 .app-background {
   position: fixed;
   inset: 0;
@@ -33,9 +82,9 @@ body {
   position: relative;
   z-index: 1;
   display: flex;
-  height: 100%;
-  width: 100%;
+  flex: 1 1 auto;
   min-height: 0;
+  width: 100%;
 }
 
 .launcher-column,
@@ -52,6 +101,7 @@ body {
   border-right: 1px solid rgba(255, 255, 255, 0.12);
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
 }
 
 .shell {
@@ -96,12 +146,17 @@ body {
 }
 
 .app-version {
-  margin: 0 0 10px;
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  margin: 0;
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: #d8d8d8;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  z-index: 2;
+  text-align: left;
 }
 
 .logo {
@@ -213,6 +268,12 @@ body {
   line-height: 1.35;
   width: 100%;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.status.status-error {
+  color: #ff5252;
+  font-weight: 700;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
 }
 
 .download-latest-link {

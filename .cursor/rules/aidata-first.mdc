@@ -1,0 +1,64 @@
+---
+description: Always read aidata first; persist every conversation and code change there
+alwaysApply: true
+---
+
+# Aidata first (always)
+
+`aidata/` is this project's agent memory. Read it before any work. Write every conversation and every update into it before you finish.
+
+## Read first
+
+At the start of every conversation, before exploring code or making changes, read:
+
+1. `aidata/README.md`
+2. `aidata/PROJECT.md`
+3. `aidata/changes/CHANGELOG.md` (newest entries)
+4. `aidata/conversations/INDEX.md`
+
+Then open any conversation files the index marks as relevant.
+
+## Write before finishing
+
+After decisions, file changes, or a completed conversation, **append** (never delete or rewrite history):
+
+| What happened | Where to write |
+|---------------|----------------|
+| Conversation / request / decisions | `aidata/conversations/YYYY-MM-DD-short-slug.md` |
+| Index row for that file | `aidata/conversations/INDEX.md` (newest first) |
+| Code or config change | `aidata/changes/CHANGELOG.md` (newest first) |
+| Stable facts changed | `aidata/PROJECT.md` + bump `Last updated` |
+
+If the date file already exists, append a new section. Do not skip this because the change was "small."
+
+## Conversation file shape
+
+```markdown
+# Short title
+
+**Date:** YYYY-MM-DD
+**Agent:** Cursor
+
+## Goals
+- ...
+
+## Decisions
+- ...
+
+## Output
+- paths / config keys touched
+```
+
+## Changelog entry shape
+
+```markdown
+## YYYY-MM-DD — short title
+
+**Agent:** Cursor
+**Files:** `path/a`, `path/b`, aidata
+
+**What:** one or two sentences.
+**Why:** user intent.
+```
+
+Keep entries concise. Include real paths and config keys. Do not dump full chat transcripts.

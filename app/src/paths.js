@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { defaultInstallDir } = require('../../lib/paths');
-const { copyFileRobust, copyTree, makeWritable, makeWritableTree } = require('../../lib/copy-file');
+const { copyFileRobust, copyTree, copyTreeMissingOnly, makeWritable, makeWritableTree } = require('../../lib/copy-file');
 
 function bundledPackRoot() {
   const candidates = [
@@ -30,14 +30,15 @@ function ensurePackInstalled(installDir) {
     return { seeded: false, reason: 'no_bundled_pack' };
   }
 
-  // Always refresh config/options from payload; only seed SE jars if mods empty.
+  // Seed config/options only when absent; preserve user edits on later launches.
   if (fs.existsSync(path.join(pack, 'config'))) {
-    copyTree(path.join(pack, 'config'), path.join(installDir, 'config'));
+    copyTreeMissingOnly(path.join(pack, 'config'), path.join(installDir, 'config'));
     makeWritableTree(path.join(installDir, 'config'));
   }
-  if (fs.existsSync(path.join(pack, 'options.txt'))) {
-    copyFileRobust(path.join(pack, 'options.txt'), path.join(installDir, 'options.txt'));
-    makeWritable(path.join(installDir, 'options.txt'));
+  const optionsDest = path.join(installDir, 'options.txt');
+  if (fs.existsSync(path.join(pack, 'options.txt')) && !fs.existsSync(optionsDest)) {
+    copyFileRobust(path.join(pack, 'options.txt'), optionsDest);
+    makeWritable(optionsDest);
   }
 
   const jarCount = fs.existsSync(mods)

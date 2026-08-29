@@ -11,7 +11,15 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-background" aria-hidden="true">
+    <div class="app-frame">
+      <div id="launcher-update-banner" class="launcher-update-banner hidden" role="alert">
+        <span class="launcher-update-banner-text">
+          Your Launcher is Out of Date! Please update Launcher by clicking
+          <button type="button" id="btn-launcher-update-here" class="launcher-update-here">Here</button>
+        </span>
+      </div>
+
+      <div class="app-background" aria-hidden="true">
       <video
         id="app-background-video"
         class="app-background-media"
@@ -27,8 +35,8 @@
 
     <div class="app-columns">
       <main class="shell launcher-column">
+        <p id="app-version" class="app-version" aria-label="Game version">v1.0.1</p>
         <header class="brand">
-          <p id="app-version" class="app-version" aria-label="Launcher version">1.0.1</p>
           <img class="logo" src="../assets/icon-transparent.png" alt="Sieged Empires" />
           <h1>Sieged Empires</h1>
           <p id="tagline" class="tagline">Sign in, then press Play.</p>
@@ -63,20 +71,10 @@
           <button id="btn-website" type="button" class="link-action">Visit our Website!</button>
 
           <p class="disclosure">Login stays on this computer only.</p>
-          <p id="outdated-warning" class="outdated-warning hidden" role="alert">
-            You are using an Outdated version! Install the Latest Update!
-          </p>
         </section>
 
         <div class="footer-status">
           <p id="status" class="status" aria-live="polite"></p>
-          <button
-            id="btn-download-latest"
-            type="button"
-            class="download-latest-link hidden"
-          >
-            Download Latest Version
-          </button>
         </div>
       </main>
 
@@ -93,6 +91,7 @@
           <p class="news-muted">Loading newsletter…</p>
         </div>
       </aside>
+    </div>
     </div>
     <script src="renderer.js"></script>
   </body>

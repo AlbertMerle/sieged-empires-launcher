@@ -3,7 +3,9 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('sieged', {
   fetchNews: () => ipcRenderer.invoke('news:fetch'),
   getVersion: () => ipcRenderer.invoke('app:getVersion'),
+  getPackVersion: () => ipcRenderer.invoke('app:getPackVersion'),
   checkUpdate: () => ipcRenderer.invoke('app:checkUpdate'),
+  fetchLauncherStream: () => ipcRenderer.invoke('app:fetchLauncherStream'),
   joinDiscord: () => ipcRenderer.invoke('discord:join'),
   openWebsite: () => ipcRenderer.invoke('website:open'),
   openDownloadPage: () => ipcRenderer.invoke('download:open'),

@@ -3,6 +3,13 @@ const { installCopyFilePatch } = require('../../lib/copy-file');
 
 installCopyFilePatch();
 
+// Enforce single instance lock across all platforms:
+// Never allow more than 1 launcher open at a time.
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+if (!gotSingleInstanceLock) {
+  app.exit(0);
+}
+
 // Enable GPU hardware acceleration & rasterization for smooth 60fps WebM background playback
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-zero-copy');
@@ -36,10 +43,25 @@ const {
 } = require('./auth');
 const { launchGame } = require('./launcher');
 const { getInstallDir, ensurePackInstalled } = require('./paths');
-const { syncGamePack, packStatus } = require('./pack-sync');
+const { syncGamePack, packStatus, readInstalledPackVersion } = require('./pack-sync');
 const { ensureJava25 } = require('./java-runtime');
+const { fetchLauncherStream } = require('./launcher-stream');
 
 let mainWindow = null;
+let isGameLaunching = false;
+let isGameRunning = false;
+
+app.on('second-instance', () => {
+  // If game is launching or currently running, do not bring launcher to front or disrupt gameplay
+  if (isGameLaunching || isGameRunning) {
+    return;
+  }
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    if (!mainWindow.isVisible()) mainWindow.show();
+    mainWindow.focus();
+  }
+});
 
 function parseVersionParts(version) {
   return String(version || '')
@@ -87,24 +109,6 @@ function send(channel, data) {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send(channel, data);
   }
-}
-
-/**
- * Force-close after Minecraft starts. app.quit() is not enough on Windows
- * when Java stdio is still piped. With detached + stdio ignore, exit works.
- */
-function exitLauncherNow() {
-  try {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.removeAllListeners();
-      mainWindow.hide();
-      mainWindow.destroy();
-    }
-  } catch {
-    /* ignore */
-  }
-  mainWindow = null;
-  app.exit(0);
 }
 
 function playErrorMessage(err) {
@@ -253,7 +257,29 @@ ipcMain.handle('news:fetch', async () => {
 
 ipcMain.handle('app:getVersion', async () => APP_VERSION);
 
+ipcMain.handle('app:getPackVersion', async () => readInstalledPackVersion());
+
+ipcMain.handle('app:fetchLauncherStream', async () => {
+  const stream = await fetchLauncherStream();
+  return {
+    ...stream,
+    downloadPageUrl: DOWNLOAD_PAGE_URL,
+  };
+});
+
 ipcMain.handle('app:checkUpdate', async () => {
+  const stream = await fetchLauncherStream();
+  if (stream.ok) {
+    return {
+      ok: true,
+      outdated: stream.needsLauncherUpdate,
+      current: APP_VERSION,
+      latest: null,
+      pageUrl: DOWNLOAD_PAGE_URL,
+      source: 'gist',
+      config: stream.config,
+    };
+  }
   try {
     const res = await fetch(DOWNLOAD_FILES_URL, {
       headers: { 'User-Agent': 'SiegedEmpires-Launcher/1.0' },
@@ -269,6 +295,7 @@ ipcMain.handle('app:checkUpdate', async () => {
         current: APP_VERSION,
         latest: null,
         pageUrl: DOWNLOAD_PAGE_URL,
+        source: 'files.json',
       };
     }
     const outdated = compareVersions(APP_VERSION, latest) < 0;
@@ -278,6 +305,7 @@ ipcMain.handle('app:checkUpdate', async () => {
       current: APP_VERSION,
       latest,
       pageUrl: DOWNLOAD_PAGE_URL,
+      source: 'files.json',
     };
   } catch (err) {
     return {
@@ -302,7 +330,7 @@ ipcMain.handle('app:getState', async () => {
     } catch (err) {
       console.warn('MC launcher re-import:', err?.message || err);
     }
-    pack = packStatus();
+    pack = await packStatus();
   } catch (err) {
     return { error: err.message, account: null, accounts: [], pack: null };
   }
@@ -353,13 +381,15 @@ ipcMain.handle('auth:reimport', async () => {
 
 /**
  * Play = require login → sync pack (progress) → launch Minecraft + Fabric + mods.
- * This is our own launcher — never CurseForge.
+ * When game starts, hide launcher window. When game closes/crashes, re-open launcher.
  */
 ipcMain.handle('game:play', async () => {
+  isGameLaunching = true;
   try {
     send('game:event', { type: 'status', message: 'Checking account…', percent: 0 });
     await getLaunchAuth();
   } catch (err) {
+    isGameLaunching = false;
     const msg = playErrorMessage(err);
     send('game:event', { type: 'error', message: msg });
     throw new Error(msg);
@@ -377,10 +407,13 @@ ipcMain.handle('game:play', async () => {
       });
     });
   } catch (err) {
+    isGameLaunching = false;
     const msg = playErrorMessage(err);
     send('game:event', { type: 'error', message: msg });
     throw new Error(msg);
   }
+
+  send('game:event', { type: 'status', message: 'Checking for updates…', percent: 0 });
 
   try {
     await syncGamePack((p) => {
@@ -389,9 +422,18 @@ ipcMain.handle('game:play', async () => {
         percent: 8 + Math.round(((p.percent ?? 0) / 100) * 87),
         message: p.message,
         stage: p.stage,
+        packVersion: p.packVersion,
+        installedPackVersion: p.installedPackVersion,
       });
+      if (p.installedPackVersion) {
+        send('game:event', {
+          type: 'pack-version',
+          version: p.installedPackVersion,
+        });
+      }
     });
   } catch (err) {
+    isGameLaunching = false;
     const msg = playErrorMessage(err);
     send('game:event', { type: 'error', message: msg });
     throw new Error(msg);
@@ -403,25 +445,50 @@ ipcMain.handle('game:play', async () => {
       message: 'Downloading Minecraft…',
       percent: 5,
     });
-    const result = await launchGame((ev) => send('game:event', ev));
 
-    // Game is running detached — close the launcher. Do not reopen when Minecraft exits.
-    if (result?.quitLauncher !== false) {
-      send('game:event', {
-        type: 'started',
-        message: 'Launching Game...',
-        percent: 100,
-      });
-      try {
-        if (mainWindow && !mainWindow.isDestroyed()) mainWindow.hide();
-      } catch {
-        /* ignore */
+    const result = await launchGame(
+      (ev) => send('game:event', ev),
+      (exitInfo) => {
+        isGameRunning = false;
+        isGameLaunching = false;
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.show();
+          mainWindow.restore();
+          mainWindow.focus();
+        }
+        send('game:event', {
+          type: 'game-exit',
+          outcome: exitInfo?.outcome || 'quit',
+          message: exitInfo?.message || '',
+        });
       }
-      setImmediate(() => exitLauncherNow());
+    );
+
+    isGameLaunching = false;
+    isGameRunning = true;
+    send('game:event', {
+      type: 'started',
+      message: 'Launching Game...',
+      percent: 100,
+    });
+
+    try {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.hide();
+      }
+    } catch {
+      /* ignore */
     }
 
     return { ok: true, ...result };
   } catch (err) {
+    isGameLaunching = false;
+    isGameRunning = false;
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      if (!mainWindow.isVisible()) mainWindow.show();
+      mainWindow.restore();
+      mainWindow.focus();
+    }
     const msg = playErrorMessage(err);
     send('game:event', { type: 'error', message: msg });
     throw new Error(msg);

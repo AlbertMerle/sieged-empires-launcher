@@ -5,13 +5,13 @@ const btnLogout = document.getElementById('btn-logout');
 const btnAddAccount = document.getElementById('btn-add-account');
 const btnDiscord = document.getElementById('btn-discord');
 const btnWebsite = document.getElementById('btn-website');
-const btnDownloadLatest = document.getElementById('btn-download-latest');
+const btnLauncherUpdateHere = document.getElementById('btn-launcher-update-here');
 const btnPlay = document.getElementById('btn-play');
 const loginActions = document.getElementById('login-actions');
 const tagline = document.getElementById('tagline');
 const userLine = document.getElementById('user-line');
 const statusEl = document.getElementById('status');
-const outdatedWarning = document.getElementById('outdated-warning');
+const launcherUpdateBanner = document.getElementById('launcher-update-banner');
 const progressWrap = document.getElementById('progress-wrap');
 const progressPct = document.getElementById('progress-pct');
 const progressBar = document.getElementById('progress-bar');
@@ -65,15 +65,15 @@ function renderNewsItems(items) {
     .join('');
 }
 
-function showDownloadLatestLink(show) {
-  if (!btnDownloadLatest) return;
-  if (show) btnDownloadLatest.classList.remove('hidden');
-  else btnDownloadLatest.classList.add('hidden');
-}
-
 function setIdleStatus() {
   statusEl.textContent = '';
-  showDownloadLatestLink(launcherOutdated);
+  statusEl.classList.remove('status-error');
+}
+
+function setLauncherUpdateBanner(show) {
+  if (!launcherUpdateBanner) return;
+  if (show) launcherUpdateBanner.classList.remove('hidden');
+  else launcherUpdateBanner.classList.add('hidden');
 }
 
 function playErrorMessage(err) {
@@ -88,10 +88,14 @@ function playErrorMessage(err) {
   return msg;
 }
 
-function setStatus(msg) {
+function setStatus(msg, isError = false) {
   if (msg) {
-    showDownloadLatestLink(false);
     statusEl.textContent = msg;
+    if (isError) {
+      statusEl.classList.add('status-error');
+    } else {
+      statusEl.classList.remove('status-error');
+    }
     return;
   }
   setIdleStatus();
@@ -106,7 +110,7 @@ function setBusy(busy) {
     btnAddAccount,
     btnDiscord,
     btnWebsite,
-    btnDownloadLatest,
+    btnLauncherUpdateHere,
   ].forEach((b) => {
     if (b) b.disabled = busy;
   });
@@ -227,6 +231,9 @@ async function refresh() {
   }
   renderAccounts(state.accounts || []);
   applyAccount(state.account, state.accounts);
+  if (state.pack?.installedPackVersion) {
+    setPackVersionLabel(state.pack.installedPackVersion);
+  }
   setIdleStatus();
 }
 
@@ -280,13 +287,16 @@ btnPlay.addEventListener('click', async () => {
     setStatus('Launching Game...');
   } catch (err) {
     if (playLocked) return;
-    const msg = playErrorMessage(err);
-    setStatus(msg.includes('sign into Microsoft') ? LOGIN_REQUIRED : msg);
+    playLocked = false;
+    setBusy(false);
     hideProgress();
-    // Show login again if Play failed for auth.
+    const msg = playErrorMessage(err);
     if (msg.includes('sign into Microsoft')) {
+      setStatus(LOGIN_REQUIRED, true);
       loginActions.classList.remove('hidden');
       btnAddAccount.classList.add('hidden');
+    } else {
+      setStatus('Game failed to Load please try again!', true);
     }
   } finally {
     if (!playLocked) setBusy(false);
@@ -325,22 +335,47 @@ btnWebsite.addEventListener('click', async () => {
   }
 });
 
-btnDownloadLatest?.addEventListener('click', async () => {
-  setBusy(true);
+btnLauncherUpdateHere?.addEventListener('click', async () => {
   try {
     const res = await window.sieged.openDownloadPage();
-    if (!res?.ok) setStatus(res?.error || 'Could not open download page.');
-    else setIdleStatus();
+    if (!res?.ok) setStatus(res?.error || 'Could not open download page.', true);
   } catch (err) {
-    setStatus(err?.message || 'Could not open download page.');
-  } finally {
-    setBusy(false);
+    setStatus(err?.message || 'Could not open download page.', true);
   }
 });
 
 window.sieged.onGameEvent((ev) => {
+  if (ev?.type === 'pack-version' && ev.version) {
+    setPackVersionLabel(ev.version);
+    return;
+  }
+  if (ev?.type === 'game-exit') {
+    playLocked = false;
+    setBusy(false);
+    hideProgress();
+    if (ev.outcome === 'failed') {
+      setStatus(ev.message || 'Game failed to Load please try again!', true);
+    } else if (ev.outcome === 'crashed-10m') {
+      setStatus(ev.message || 'Game Crashed! Report Bug to Owner', true);
+    } else {
+      // outcome === 'quit' (normal quit / closed window / exited tab)
+      setIdleStatus();
+      loadVersion();
+    }
+    return;
+  }
   if (ev?.type === 'error') {
-    setStatus(ev.message || LOGIN_REQUIRED);
+    playLocked = false;
+    setBusy(false);
+    hideProgress();
+    const msg = ev.message || '';
+    if (msg.includes('sign into Microsoft')) {
+      setStatus(LOGIN_REQUIRED, true);
+      loginActions.classList.remove('hidden');
+      btnAddAccount.classList.add('hidden');
+    } else {
+      setStatus('Game failed to Load please try again!', true);
+    }
     return;
   }
   if (ev?.type === 'progress') {
@@ -358,9 +393,6 @@ window.sieged.onGameEvent((ev) => {
   if (ev?.type === 'status' || ev?.type === 'warn') {
     if (typeof ev.percent === 'number') setProgress(ev.percent, ev.message);
     else setStatus(ev.message);
-  }
-  if (ev?.type === 'close') {
-    return;
   }
 });
 
@@ -383,28 +415,35 @@ async function loadNews() {
   }
 }
 
+function formatPackVersion(version) {
+  const v = String(version || '').trim().replace(/^v/i, '');
+  return v ? `v${v}` : 'v1.0.1';
+}
+
+function setPackVersionLabel(version) {
+  if (!appVersionEl) return;
+  appVersionEl.textContent = formatPackVersion(version);
+}
+
 async function loadVersion() {
-  if (!appVersionEl || !window.sieged.getVersion) return;
+  if (!appVersionEl || !window.sieged.getPackVersion) return;
   try {
-    const version = await window.sieged.getVersion();
-    if (version) appVersionEl.textContent = version;
+    const version = await window.sieged.getPackVersion();
+    if (version) setPackVersionLabel(version);
   } catch {
     // keep hardcoded fallback in HTML
   }
 }
 
 async function checkForLauncherUpdate() {
-  if (!window.sieged.checkUpdate) return;
+  if (!window.sieged.fetchLauncherStream) return;
   try {
-    const res = await window.sieged.checkUpdate();
-    launcherOutdated = Boolean(res?.outdated);
+    const res = await window.sieged.fetchLauncherStream();
+    launcherOutdated = Boolean(res?.needsLauncherUpdate);
   } catch {
     launcherOutdated = false;
   }
-  if (outdatedWarning) {
-    if (launcherOutdated) outdatedWarning.classList.remove('hidden');
-    else outdatedWarning.classList.add('hidden');
-  }
+  setLauncherUpdateBanner(launcherOutdated);
   setIdleStatus();
 }
 

@@ -77,8 +77,8 @@ function readCurrentSessionLog(gameRoot, spawnTime, initialMtime) {
 }
 
 /**
- * Spawn javaw/java with no pipes so Electron can exit without killing or
- * waiting on Minecraft. MCLC's default spawn pipes stdout and keeps us alive.
+ * Spawn javaw/java with no pipes so Electron can monitor the child without
+ * holding stdio streams open.
  */
 function spawnDetachedMinecraft(javaPath, launchArguments, cwd) {
   const { spawn } = require('child_process');
@@ -89,8 +89,76 @@ function spawnDetachedMinecraft(javaPath, launchArguments, cwd) {
     windowsHide: true,
     env: process.env,
   });
-  proc.unref();
   return proc;
+}
+
+function detectGameCrash(gameRoot, gameStartTime, exitCode, exitSignal) {
+  if (exitCode !== null && exitCode !== undefined && exitCode !== 0) {
+    return true;
+  }
+  if (exitSignal && ['SIGSEGV', 'SIGABRT', 'SIGILL', 'SIGBUS', 'SIGFPE', 'SIGKILL'].includes(exitSignal)) {
+    return true;
+  }
+
+  try {
+    const crashDir = path.join(gameRoot, 'crash-reports');
+    if (fs.existsSync(crashDir)) {
+      const files = fs.readdirSync(crashDir);
+      for (const file of files) {
+        if (file.endsWith('.txt')) {
+          const st = fs.statSync(path.join(crashDir, file));
+          if (st.mtimeMs >= gameStartTime - 2000) {
+            return true;
+          }
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    const files = fs.readdirSync(gameRoot);
+    for (const file of files) {
+      if (/^hs_err_pid.*\.log$/i.test(file)) {
+        const st = fs.statSync(path.join(gameRoot, file));
+        if (st.mtimeMs >= gameStartTime - 2000) {
+          return true;
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    const logPath = path.join(gameRoot, 'logs', 'latest.log');
+    if (fs.existsSync(logPath)) {
+      const st = fs.statSync(logPath);
+      if (st.mtimeMs >= gameStartTime - 2000) {
+        const readLen = Math.min(st.size, 8192);
+        if (readLen > 0) {
+          const fd = fs.openSync(logPath, 'r');
+          const buf = Buffer.alloc(readLen);
+          fs.readSync(fd, buf, 0, readLen, Math.max(0, st.size - readLen));
+          fs.closeSync(fd);
+          const tail = buf.toString('utf8');
+          if (
+            /---- Minecraft Crash Report ----|This crash report has been saved to:|# A fatal error has been detected by the Java Runtime Environment:|Exception in thread "[^"]*" java\.lang\.|FATAL/i.test(
+              tail
+            ) &&
+            !/Stopping!|Sound engine shut down/i.test(tail.slice(-500))
+          ) {
+            return true;
+          }
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  return false;
 }
 
 /**
@@ -295,7 +363,8 @@ async function ensureFabric(gameRoot, mcVersion, pinnedLoader, onEvent) {
   return versionId;
 }
 
-async function launchGame(onEvent = () => {}) {
+async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
+  const gameStartTime = Date.now();
   const cfg = loadAppConfig();
   const auth = await getLaunchAuth();
   const gameRoot = instanceDir();
@@ -380,7 +449,6 @@ async function launchGame(onEvent = () => {}) {
       });
     }
   });
-  // Do not surface "close" — launcher exits after start; game ending must not reopen us.
 
   onEvent({
     type: 'status',
@@ -393,8 +461,7 @@ async function launchGame(onEvent = () => {}) {
     throw new Error('Java 25 is not available. Press Play again to install it.');
   }
 
-  // MCLC always pipes Java stdout; that keeps Electron alive and lets Play
-  // get clicked again. Spawn ourselves with stdio ignored.
+  // MCLC always pipes Java stdout; spawn with stdio ignored for clean background execution.
   launcher.startMinecraft = function startMinecraft(launchArguments) {
     onEvent({
       type: 'status',
@@ -439,9 +506,62 @@ async function launchGame(onEvent = () => {}) {
     message: 'Launching Game...',
   });
 
+  let gameLoadedSuccessfully = false;
+
+  // Process monitoring and exit handling for launcher re-open and error messages
+  let exitHandled = false;
+  const handleGameExit = (code, signal) => {
+    if (exitHandled) return;
+    exitHandled = true;
+    if (pollInterval) clearInterval(pollInterval);
+
+    const durationMs = Date.now() - gameStartTime;
+    const TEN_MINUTES_MS = 10 * 60 * 1000;
+    const crashed = detectGameCrash(gameRoot, gameStartTime, code, signal);
+
+    let outcome = 'quit';
+    let message = '';
+    if (!gameLoadedSuccessfully) {
+      outcome = 'failed';
+      message = 'Game failed to Load please try again!';
+    } else if (crashed) {
+      if (durationMs >= TEN_MINUTES_MS) {
+        outcome = 'crashed-10m';
+        message = 'Game Crashed! Report Bug to Owner';
+      } else {
+        outcome = 'failed';
+        message = 'Game failed to Load please try again!';
+      }
+    } else {
+      outcome = 'quit';
+      message = '';
+    }
+
+    onGameExit({
+      outcome,
+      message,
+      durationMs,
+      exitCode: code,
+      exitSignal: signal,
+      gameLoadedSuccessfully,
+    });
+  };
+
+  child.on('exit', (code, signal) => handleGameExit(code, signal));
+  child.on('close', (code, signal) => handleGameExit(code, signal));
+  child.on('error', () => handleGameExit(1, null));
+
+  const pollInterval = setInterval(() => {
+    if (!processAlive(child.pid)) {
+      handleGameExit(null, null);
+    }
+  }, 1000);
+
   try {
     await waitUntilMinecraftOpened(child.pid, gameRoot, onEvent);
+    gameLoadedSuccessfully = true;
   } catch (err) {
+    handleGameExit(1, null);
     const msg = err?.message || String(err);
     onEvent({ type: 'error', message: `Launch failed: ${msg}` });
     throw new Error(`Launch failed: ${msg}`);
@@ -459,7 +579,6 @@ async function launchGame(onEvent = () => {}) {
     modsDir: mods,
     configDir: configDir(),
     fabricId,
-    quitLauncher: true,
   };
 }
 

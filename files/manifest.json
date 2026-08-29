@@ -1488,10 +1488,10 @@
       "path": "mods/distantnoise-1.0.0.jar",
       "source": "mods/distantnoise-1.0.0.jar",
       "hashes": {
-        "sha1": "fbbead02113922e6a2428db4726bc0a6259ad860",
-        "sha512": "53e2ef9fb2f14bbd75997312ee058e270372cee23c5d42f043f62766d5b5f4893ff1ec924da1dc6346462babce5e8c631b21a9c4c15e2c3ed168d9d948892298"
+        "sha1": "6ae300112776f03726f25cd127b01c8c92252844",
+        "sha512": "bb6847aa277fcb9876d633dc487bb49bd78a3394c633f0319f3b80560c63f0fa2661f238b983b3814603e96394306b54effa5b9951dd5eaeca96afc213483b8d"
       },
-      "fileSize": 1130776,
+      "fileSize": 1835586,
       "reason": "custom_sieged_empires",
       "localSource": {
         "path": "distantnoise/",
@@ -1544,10 +1544,10 @@
       "path": "mods/siegedempires-1.0.0.jar",
       "source": "mods/siegedempires-1.0.0.jar",
       "hashes": {
-        "sha1": "eaef2a5eef9a120380f4dc3e99014cac13b8e072",
-        "sha512": "a0b6f59d39fda440de9bd74aeacbd41378dfb98f69f08bd0644f94e41d0a104ec554b4898ee7a67a2e0af0ff4d869948ad571cc109988d9deabed2737b7aa518"
+        "sha1": "4bcf7ff6502bbfdcf3181bedb6a8731bb9dfc797",
+        "sha512": "a0324bb4faa51b8d51c13c3f6ca9a4221996ac4011e81e520537363abe9dabd9b1083d87e06765756b4363f50648b92d5acdfb2cfaba91f0dca40ac84c6ef4dd"
       },
-      "fileSize": 19873814,
+      "fileSize": 19873968,
       "reason": "custom_sieged_empires",
       "localSource": {
         "path": "Sieged Empires/",
