@@ -4,13 +4,13 @@ Ordinary package: installs **Sieged Empires** with the custom icon and desktop i
 
 ## Release Download
 
-- **[Download SiegedEmpires-1.0.0-linux.deb](https://github.com/AlbertMerle/sieged-empires-launcher/releases/download/v1.0.0/SiegedEmpires-1.0.0-linux.deb)** (GitHub Release)
+- **[Download SiegedEmpires-1.0.1-linux.deb](https://github.com/AlbertMerle/sieged-empires-launcher/releases/download/v1.0.1/SiegedEmpires-1.0.1-linux.deb)** (GitHub Release)
 - **[Latest Release Assets](https://github.com/AlbertMerle/sieged-empires-launcher/releases/latest)**
 
 ## Install
 
 ```bash
-sudo dpkg -i SiegedEmpires-1.0.0-linux.deb
+sudo dpkg -i SiegedEmpires-1.0.1-linux.deb
 sieged-empires
 ```
 

@@ -4,12 +4,12 @@ Output folder: `windows/WindowsSetup/`
 
 ## Release Download
 
-- **[Download Sieged-Empires-1.0.0-Windows.msi](https://github.com/AlbertMerle/sieged-empires-launcher/releases/download/v1.0.0/Sieged-Empires-1.0.0-Windows.msi)** (GitHub Release)
+- **[Download Sieged-Empires-1.0.1-Windows.msi](https://github.com/AlbertMerle/sieged-empires-launcher/releases/download/v1.0.1/Sieged-Empires-1.0.1-Windows.msi)** (GitHub Release)
 - **[Latest Release Assets](https://github.com/AlbertMerle/sieged-empires-launcher/releases/latest)**
 
 ## Install
 
-Run `Sieged-Empires-1.0.0-Windows.msi` — standard Windows installer with Desktop and Start Menu shortcuts for **Sieged Empires**. A newer version MSI upgrades the existing launcher in place.
+Run `Sieged-Empires-1.0.1-Windows.msi` — standard Windows installer with Desktop and Start Menu shortcuts for **Sieged Empires**. A newer version MSI upgrades the existing launcher in place.
 
 Default game data: `%APPDATA%\sieged-empires`
 

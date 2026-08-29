@@ -16,7 +16,7 @@ const DOWNLOAD_PAGE_URL = 'https://www.siegedempires.com/#download';
 const DISCORD_INVITE_URL = 'https://discord.gg/JANcPMbV3';
 const DISCORD_INVITE_PROTOCOL = 'discord://-/invite/JANcPMbV3';
 const WEBSITE_URL = 'https://www.siegedempires.com';
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 
 const LAUNCHER_PANEL_WIDTH = 460;
 const LAUNCHER_PANEL_HEIGHT = 740;
