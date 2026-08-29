@@ -34,11 +34,11 @@
     </div>
 
     <div class="app-columns">
+      <div class="app-columns-inner">
       <main class="shell launcher-column">
         <p id="app-version" class="app-version" aria-label="Game version">v1.0.1</p>
         <header class="brand">
           <img class="logo" src="../assets/icon-transparent.png" alt="Sieged Empires" />
-          <h1>Sieged Empires</h1>
           <p id="tagline" class="tagline">Sign in, then press Play.</p>
         </header>
 
@@ -67,8 +67,14 @@
           <button id="btn-logout" type="button" class="btn ghost">Sign out</button>
           <button id="btn-add-account" type="button" class="btn ghost hidden">Add another account</button>
 
-          <button id="btn-discord" type="button" class="link-action">Join our Discord!</button>
-          <button id="btn-website" type="button" class="link-action">Visit our Website!</button>
+          <button id="btn-discord" type="button" class="link-action">
+            <span class="link-action-text">Join our Discord!</span>
+            <img class="link-action-icon" src="../assets/discord-icon.svg" alt="" width="20" height="20" />
+          </button>
+          <button id="btn-website" type="button" class="link-action">
+            <span class="link-action-text">Visit our Website!</span>
+            <img class="link-action-icon" src="../assets/website-icon.svg" alt="" width="20" height="20" />
+          </button>
 
           <p class="disclosure">Login stays on this computer only.</p>
         </section>
@@ -91,6 +97,7 @@
           <p class="news-muted">Loading newsletter…</p>
         </div>
       </aside>
+      </div>
     </div>
     </div>
     <script src="renderer.js"></script>

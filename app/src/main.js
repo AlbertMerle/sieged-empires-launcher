@@ -139,8 +139,10 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: LAUNCHER_PANEL_WIDTH * 2,
     height: LAUNCHER_PANEL_HEIGHT,
+    minWidth: LAUNCHER_PANEL_WIDTH * 2,
+    minHeight: LAUNCHER_PANEL_HEIGHT,
     useContentSize: true,
-    resizable: false,
+    resizable: true,
     backgroundColor: '#0a0a0a',
     title: 'Sieged Empires',
     icon: iconPath(),
