@@ -29,7 +29,7 @@
     "dist:win:msi": "npm run prepare:pack:win && electron-builder --win msi --config windows/setup-builder.json",
     "dist:win:zip": "npm run prepare:pack:win && electron-builder --win zip --config windows/setup-builder.json",
     "dist:win:dir": "npm run prepare:pack:win && electron-builder --win dir --config windows/setup-builder.json",
-    "dist:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false npm run prepare:pack:mac && electron-builder --mac dmg --config MacOS/setup-builder.json",
+    "dist:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false npm run prepare:pack:mac && electron-builder --mac dmg --universal --config MacOS/setup-builder.json",
     "dist:mac:zip": "CSC_IDENTITY_AUTO_DISCOVERY=false npm run prepare:pack:mac && electron-builder --mac zip --config MacOS/setup-builder.json",
     "dist:mac:script": "bash scripts/build-mac-unsigned.sh",
     "dist": "npm run dist:linux && npm run dist:win"
