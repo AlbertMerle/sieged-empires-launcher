@@ -1,5 +1,5 @@
 # Unsigned macOS Sieged Empires launcher (.dmg + .zip)
-# Same universal pack as Linux — uses files/manifest.json
+# Same universal pack as Linux — uses installer/files/manifest.json
 
 name: macOS unsigned installer
 
@@ -15,6 +15,9 @@ jobs:
     name: unsigned dmg + zip
     runs-on: macos-latest
     timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: installer
     steps:
       - uses: actions/checkout@v4
 
@@ -22,7 +25,7 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: installer/package-lock.json
 
       - name: Install deps
         run: npm ci
@@ -32,6 +35,19 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: npm run dist:mac
 
+      - name: Ad-hoc sign + bundle launch helper
+        run: |
+          chmod +x scripts/build-mac-unsigned.sh
+          APP="MacOS/MacOSSetup/mac/Sieged Empires.app"
+          if [ -d "$APP" ]; then
+            codesign --force --deep --sign - "$APP" || true
+            lipo -info "$APP/Contents/MacOS/Sieged Empires" || file "$APP/Contents/MacOS/Sieged Empires"
+          fi
+          chmod +x "MacOS/Launch Sieged Empires.command"
+          for z in MacOS/MacOSSetup/SiegedEmpires-*-mac.zip; do
+            [ -f "$z" ] && zip -j -u "$z" "MacOS/Launch Sieged Empires.command" || true
+          done
+
       - name: Checksums
         run: shasum -a 256 MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
 
@@ -39,7 +55,7 @@ jobs:
         with:
           name: sieged-empires-mac-unsigned
           path: |
-            MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
-            MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
+            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
+            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
           retention-days: 14
           if-no-files-found: error

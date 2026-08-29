@@ -104,8 +104,19 @@ function commonJavaCandidates() {
     list.push(
       path.join(installDir, 'runtime', 'jre-25', 'Contents', 'Home', 'bin', 'java'),
       path.join(installDir, 'runtime', 'jre-25', 'bin', 'java'),
-      '/Library/Java/JavaVirtualMachines/temurin-25.jre/Contents/Home/bin/java'
+      '/Library/Java/JavaVirtualMachines/temurin-25.jre/Contents/Home/bin/java',
+      '/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home/bin/java'
     );
+    try {
+      const { execFileSync } = require('child_process');
+      const home = execFileSync('/usr/libexec/java_home', ['-v', '25'], {
+        encoding: 'utf8',
+        timeout: 5000,
+      }).trim();
+      if (home) list.unshift(path.join(home, 'bin', 'java'));
+    } catch {
+      /* no system Java 25 */
+    }
   } else {
     list.push(
       path.join(installDir, 'runtime', 'jre-25', 'bin', 'java'),

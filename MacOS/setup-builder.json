@@ -32,14 +32,18 @@
     { "from": "assets/icon-transparent.png", "to": "assets/icon.png" }
   ],
   "mac": {
-    "target": ["dmg", "zip"],
+    "target": [
+      { "target": "zip", "arch": ["x64", "arm64"] },
+      { "target": "dmg", "arch": ["x64", "arm64"] }
+    ],
     "category": "public.app-category.games",
     "icon": "assets/icon.png",
     "artifactName": "SiegedEmpires-${version}-mac.${ext}",
     "identity": null,
     "hardenedRuntime": false,
     "gatekeeperAssess": false,
-    "notarize": false
+    "notarize": false,
+    "electronLanguages": ["en"]
   },
   "dmg": {
     "title": "Sieged Empires",

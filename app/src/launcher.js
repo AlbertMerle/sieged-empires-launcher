@@ -89,6 +89,8 @@ function spawnDetachedMinecraft(javaPath, launchArguments, cwd) {
     windowsHide: true,
     env: process.env,
   });
+  // Allow Electron to exit without taking Minecraft down with it.
+  if (typeof proc.unref === 'function') proc.unref();
   return proc;
 }
 
@@ -565,6 +567,18 @@ async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
     const msg = err?.message || String(err);
     onEvent({ type: 'error', message: `Launch failed: ${msg}` });
     throw new Error(`Launch failed: ${msg}`);
+  }
+
+  // Game is running — stop exit monitoring so the launcher can quit cleanly.
+  if (pollInterval) clearInterval(pollInterval);
+  exitHandled = true;
+  try {
+    child.removeAllListeners('exit');
+    child.removeAllListeners('close');
+    child.removeAllListeners('error');
+    if (typeof child.unref === 'function') child.unref();
+  } catch {
+    /* ignore */
   }
 
   onEvent({

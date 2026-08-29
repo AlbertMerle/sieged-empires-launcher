@@ -36,17 +36,20 @@ chmod +x scripts/build-mac-unsigned.sh
 
 Unsigned apps are blocked until opened once this way:
 
-1. Open the `.dmg`, drag **Sieged Empires** to Applications (or open from the volume).
-2. **Right-click** the app → **Open** → **Open** again in the dialog.
-3. Next launches are normal double-click.
+1. Open the `.zip` and keep **`Launch Sieged Empires.command`** next to **`Sieged Empires.app`** (both in the same folder).
+2. **Double-click `Launch Sieged Empires.command`** the first time (clears quarantine and opens the app).
+3. Or: **Right-click** the app → **Open** → **Open** again in the dialog.
+4. Move the app to `/Applications` after the first successful launch if you like.
 
 If it still says “damaged”: System Settings → Privacy & Security → allow, or:
 
 ```bash
-xattr -cr "/Applications/Sieged Empires.app"
+xattr -cr "/path/to/Sieged Empires.app"
 ```
 
-Then right-click → Open again.
+Then use **Launch Sieged Empires.command** or right-click → Open again.
+
+**Apple Silicon (M1/M2/M3):** Use a **universal** build from GitHub Actions or a Mac (`npm run dist:mac`). Linux-only `dist:mac:zip` is Intel-only and will not open on Apple Silicon without Rosetta.
 
 ## What “working” looks like
 

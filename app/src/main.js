@@ -194,6 +194,16 @@ app.setName('Sieged Empires');
 
 app.whenReady().then(createWindow);
 
+// macOS: re-create the window when the dock icon is clicked and no windows remain.
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  } else if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
@@ -381,7 +391,8 @@ ipcMain.handle('auth:reimport', async () => {
 
 /**
  * Play = require login → sync pack (progress) → launch Minecraft + Fabric + mods.
- * When game starts, hide launcher window. When game closes/crashes, re-open launcher.
+ * When the game window opens, quit the launcher (Minecraft keeps running).
+ * If launch fails, keep the launcher open with an error message.
  */
 ipcMain.handle('game:play', async () => {
   isGameLaunching = true;
@@ -465,20 +476,15 @@ ipcMain.handle('game:play', async () => {
     );
 
     isGameLaunching = false;
-    isGameRunning = true;
+    isGameRunning = false;
     send('game:event', {
       type: 'started',
       message: 'Launching Game...',
       percent: 100,
     });
 
-    try {
-      if (mainWindow && !mainWindow.isDestroyed()) {
-        mainWindow.hide();
-      }
-    } catch {
-      /* ignore */
-    }
+    // Close the launcher once Minecraft is running (do not hide + re-open on exit).
+    app.quit();
 
     return { ok: true, ...result };
   } catch (err) {

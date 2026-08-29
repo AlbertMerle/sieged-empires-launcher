@@ -22,7 +22,8 @@ Artifacts appear here after a successful build on **macOS** (local Mac or GitHub
 - `SiegedEmpires-*-mac.dmg`
 - `SiegedEmpires-*-mac.zip`
 
-On Linux (universal zip):
+On Linux (Intel-only zip — **not for Apple Silicon release**):
 ```bash
 npm run dist:mac:zip
 ```
+Ship Mac releases from **GitHub Actions `macos-latest`** or `./scripts/build-mac-unsigned.sh` on a real Mac (universal Intel + Apple Silicon).
