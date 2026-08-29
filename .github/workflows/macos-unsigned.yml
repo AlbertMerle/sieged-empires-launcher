@@ -1,5 +1,5 @@
 # Unsigned macOS Sieged Empires launcher (.dmg + .zip)
-# Same universal pack as Linux — uses installer/files/manifest.json
+# Universal Intel + Apple Silicon — must run on macos-latest
 
 name: macOS unsigned installer
 
@@ -15,9 +15,6 @@ jobs:
     name: unsigned dmg + zip
     runs-on: macos-latest
     timeout-minutes: 45
-    defaults:
-      run:
-        working-directory: installer
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +22,7 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: installer/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install deps
         run: npm ci
@@ -37,7 +34,6 @@ jobs:
 
       - name: Ad-hoc sign + bundle launch helper
         run: |
-          chmod +x scripts/build-mac-unsigned.sh
           APP="MacOS/MacOSSetup/mac/Sieged Empires.app"
           if [ -d "$APP" ]; then
             codesign --force --deep --sign - "$APP" || true
@@ -55,7 +51,7 @@ jobs:
         with:
           name: sieged-empires-mac-unsigned
           path: |
-            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
-            installer/MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
+            MacOS/MacOSSetup/SiegedEmpires-*-mac.dmg
+            MacOS/MacOSSetup/SiegedEmpires-*-mac.zip
           retention-days: 14
           if-no-files-found: error
