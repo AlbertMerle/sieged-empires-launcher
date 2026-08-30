@@ -19,6 +19,9 @@ const progressNote = document.getElementById('progress-note');
 const firstPlayHint = document.getElementById('first-play-hint');
 const newsContent = document.getElementById('news-content');
 const appVersionEl = document.getElementById('app-version');
+const ramSlider = document.getElementById('ram-slider');
+const ramValue = document.getElementById('ram-value');
+const ramSystemHint = document.getElementById('ram-system-hint');
 
 const LOGIN_REQUIRED = 'You must sign into Microsoft to Download properly!';
 const FIRST_PLAY_HINT_KEY = 'sieged-first-play-hint-shown';
@@ -111,8 +114,62 @@ function setBusy(busy) {
     btnDiscord,
     btnWebsite,
     btnLauncherUpdateHere,
+    ramSlider,
   ].forEach((b) => {
     if (b) b.disabled = busy;
+  });
+}
+
+function formatRamLabel(gb) {
+  return `${gb} GB`;
+}
+
+function applyMemoryState(state) {
+  if (!state || !ramSlider) return;
+  const minGb = state.minGb ?? 2;
+  const maxGb = state.maxGb ?? 8;
+  const ramGb = state.ramGb ?? minGb;
+  ramSlider.min = String(minGb);
+  ramSlider.max = String(maxGb);
+  ramSlider.step = '1';
+  ramSlider.value = String(ramGb);
+  ramSlider.setAttribute('aria-valuemin', String(minGb));
+  ramSlider.setAttribute('aria-valuemax', String(maxGb));
+  ramSlider.setAttribute('aria-valuenow', String(ramGb));
+  if (ramValue) ramValue.textContent = formatRamLabel(ramGb);
+  if (ramSystemHint) {
+    const total = state.totalSystemGb;
+    ramSystemHint.textContent =
+      total != null ? `System memory: ${total} GB` : 'System memory: — GB';
+  }
+}
+
+async function loadMemorySettings() {
+  if (!window.sieged.getMemoryState) return;
+  try {
+    const state = await window.sieged.getMemoryState();
+    applyMemoryState(state);
+  } catch {
+    /* keep HTML defaults */
+  }
+}
+
+if (ramSlider) {
+  ramSlider.addEventListener('input', () => {
+    const gb = Number(ramSlider.value);
+    if (ramValue) ramValue.textContent = formatRamLabel(gb);
+    ramSlider.setAttribute('aria-valuenow', String(gb));
+  });
+
+  ramSlider.addEventListener('change', async () => {
+    const gb = Number(ramSlider.value);
+    if (!window.sieged.setRamGb) return;
+    try {
+      const state = await window.sieged.setRamGb(gb);
+      applyMemoryState(state);
+    } catch {
+      /* slider already shows local value */
+    }
   });
 }
 
@@ -448,6 +505,7 @@ async function checkForLauncherUpdate() {
 }
 
 loadVersion();
+loadMemorySettings();
 loadNews();
 checkForLauncherUpdate()
   .then(() => refresh())

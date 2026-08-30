@@ -42,6 +42,7 @@ const {
   getLaunchAuth,
 } = require('./auth');
 const { launchGame } = require('./launcher');
+const { getMemoryState, setRamGb } = require('./memory-settings');
 const { getInstallDir, ensurePackInstalled } = require('./paths');
 const { syncGamePack, packStatus, readInstalledPackVersion } = require('./pack-sync');
 const { ensureJava25 } = require('./java-runtime');
@@ -270,6 +271,20 @@ ipcMain.handle('news:fetch', async () => {
 ipcMain.handle('app:getVersion', async () => APP_VERSION);
 
 ipcMain.handle('app:getPackVersion', async () => readInstalledPackVersion());
+
+ipcMain.handle('memory:getState', async () => getMemoryState());
+
+ipcMain.handle('memory:setRam', async (_e, ramGb) => {
+  const state = getMemoryState();
+  const clamped = setRamGb(ramGb);
+  return {
+    ramGb: clamped,
+    minGb: state.minGb,
+    maxGb: state.maxGb,
+    totalSystemGb: state.totalSystemGb,
+    memory: getMemoryState().memory,
+  };
+});
 
 ipcMain.handle('app:fetchLauncherStream', async () => {
   const stream = await fetchLauncherStream();

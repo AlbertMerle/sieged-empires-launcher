@@ -1513,6 +1513,26 @@
       }
     },
     {
+      "path": "mods/niftycarts-26.2.0.jar",
+      "source": "mods/niftycarts-26.2.0.jar",
+      "hashes": {
+        "sha1": "d97649405dcb9c025b6153786ec39b3497581d38",
+        "sha512": "4eb8ad93444a15974fa9885cec6ef6ca6bc869e7b98d3f34d8e5bf6db3647145a158f5e7fff5026583a0fb78290e823cd053688798b6f0db1621ac53eb332714"
+      },
+      "fileSize": 656321,
+      "reason": "third_party_mit_bundled",
+      "github": "https://github.com/jmb05/nifty-carts",
+      "license": "MIT",
+      "modrinth": {
+        "slug": "niftycarts",
+        "homepage": "https://modrinth.com/mod/niftycarts"
+      },
+      "localSource": {
+        "path": "add/",
+        "notes": "MIT — AstikorCarts Fabric port; bundled for 26.2 (not on Modrinth CDN for this MC version yet)."
+      }
+    },
+    {
       "path": "mods/shiftyocean-1.0.0.jar",
       "source": "mods/shiftyocean-1.0.0.jar",
       "hashes": {
@@ -1572,10 +1592,10 @@
       "path": "mods/voxelmapsync-1.0.0.jar",
       "source": "mods/voxelmapsync-1.0.0.jar",
       "hashes": {
-        "sha1": "e6add91424d915416de425f06498bafad30f32e6",
-        "sha512": "d077b7cf04a15bd567f27a73014be93329ab475d1b811716ab351597c3f07d2e421bf93908007729baf558d9a8e97bd9754d5a512665a440d99f428f8e302106"
+        "sha1": "1fe95595a7cb3e1ace38ac29cf7d378f2452b1b5",
+        "sha512": "7ce54541703deb3a825ac886da4f471f042ac2b18743837c051f07d6eff8d1d026c3c14a183b7e53affae425c5ccc076801946376743477f52d6955e2df3bd3b"
       },
-      "fileSize": 135367,
+      "fileSize": 169403,
       "reason": "custom_sieged_empires",
       "localSource": {
         "path": "voxelmapsync/",
@@ -1586,10 +1606,10 @@
       "path": "mods/weaponsmodaddon-1.0.0.jar",
       "source": "mods/weaponsmodaddon-1.0.0.jar",
       "hashes": {
-        "sha1": "303b318b3df2b38cb8747f13db43f886a8193a43",
-        "sha512": "8f8296607ac8efe3eb5d961116ae41477f3c9976230ff167cfe7136e422b19c23ad98eec549ed53d0b258a99ad5c099813818fb86287b16a9a92d29d0b58471a"
+        "sha1": "dfb5ea4011340f6f3706580c91302945fd10ccd0",
+        "sha512": "91d81e478a11aa33e5dee46ee37d7d06fe5d0198270b812f9bde976cb2844fdfd9e5ac80a37733d467577f3efc61c188334b0744ff7db44c2c666bbcfbb6bde4"
       },
-      "fileSize": 355885,
+      "fileSize": 358377,
       "reason": "custom_sieged_empires",
       "localSource": {
         "path": "WeaponsMod/Addon/",

@@ -10,6 +10,7 @@ const { Client } = require('minecraft-launcher-core');
 const { getLaunchAuth } = require('./auth');
 const { instanceDir, modsDir, configDir, appConfigPath, getInstallDir } = require('./paths');
 const { getJavaPath } = require('./java-runtime');
+const { getMemoryState } = require('./memory-settings');
 const { makeWritable, makeWritableTree } = require('../../lib/copy-file');
 
 function loadAppConfig() {
@@ -482,6 +483,8 @@ async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
   const customArgs =
     process.platform === 'darwin' ? ['-XstartOnFirstThread'] : undefined;
 
+  const launchMemory = getMemoryState().memory;
+
   let child;
   try {
     child = await launcher.launch({
@@ -493,8 +496,8 @@ async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
         custom: fabricId,
       },
       memory: {
-        max: cfg.memory?.max || '4096',
-        min: cfg.memory?.min || '2048',
+        max: launchMemory.max,
+        min: launchMemory.min,
       },
       javaPath,
       customArgs,

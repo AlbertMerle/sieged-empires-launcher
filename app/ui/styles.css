@@ -428,6 +428,55 @@ body {
   border-color: #5a5a5a;
 }
 
+.ram-control {
+  margin: 6px 0 2px;
+  padding: 10px 12px;
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+.ram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ram-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ececec;
+}
+
+.ram-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.ram-slider {
+  width: 100%;
+  margin: 0;
+  accent-color: #fff;
+  cursor: pointer;
+}
+
+.ram-slider:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ram-hint {
+  margin: 8px 0 0;
+  text-align: center;
+  color: #a8a8a8;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .btn.play {
   margin-top: 4px;
   background: #fff;

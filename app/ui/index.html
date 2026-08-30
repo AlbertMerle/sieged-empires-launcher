@@ -63,6 +63,26 @@
             Some users may have to re-launch after the first time, due to text errors. If you see any, restart your game.
           </p>
 
+          <div class="ram-control" aria-label="Minecraft RAM allocation">
+            <div class="ram-header">
+              <label for="ram-slider" class="ram-label">RAM</label>
+              <span id="ram-value" class="ram-value">4 GB</span>
+            </div>
+            <input
+              type="range"
+              id="ram-slider"
+              class="ram-slider"
+              min="2"
+              max="8"
+              step="1"
+              value="4"
+              aria-valuemin="2"
+              aria-valuemax="8"
+              aria-valuenow="4"
+            />
+            <p id="ram-system-hint" class="ram-hint">System memory: — GB</p>
+          </div>
+
           <button id="btn-play" type="button" class="btn play">Play</button>
           <button id="btn-logout" type="button" class="btn ghost">Sign out</button>
           <button id="btn-add-account" type="button" class="btn ghost hidden">Add another account</button>

@@ -4,6 +4,8 @@ contextBridge.exposeInMainWorld('sieged', {
   fetchNews: () => ipcRenderer.invoke('news:fetch'),
   getVersion: () => ipcRenderer.invoke('app:getVersion'),
   getPackVersion: () => ipcRenderer.invoke('app:getPackVersion'),
+  getMemoryState: () => ipcRenderer.invoke('memory:getState'),
+  setRamGb: (gb) => ipcRenderer.invoke('memory:setRam', gb),
   checkUpdate: () => ipcRenderer.invoke('app:checkUpdate'),
   fetchLauncherStream: () => ipcRenderer.invoke('app:fetchLauncherStream'),
   joinDiscord: () => ipcRenderer.invoke('discord:join'),
