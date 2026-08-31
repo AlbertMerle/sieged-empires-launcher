@@ -33,6 +33,7 @@ const STATIC_ROOT_FILES = ['options.txt', 'user_jvm_args.txt'];
 /** Pack-managed configs always re-sync when the remote blob changes (not missing-only). */
 const FORCE_SYNC_STATIC = [
   'user_jvm_args.txt',
+  'config/voxelmap.properties',
   'config/voxelmapsync.properties',
   'config/voxyserver.json',
   'config/voxy-config.json',
