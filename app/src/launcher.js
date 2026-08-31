@@ -28,6 +28,21 @@ function resolveLaunchJavaPath(javaPath) {
   return javaPath;
 }
 
+/** Optional per-install JVM flags (e.g. Voxy VRAM cap on RX 580). */
+function readUserJvmArgs(gameRoot) {
+  try {
+    const p = path.join(gameRoot, 'user_jvm_args.txt');
+    if (!fs.existsSync(p)) return [];
+    return fs
+      .readFileSync(p, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'));
+  } catch {
+    return [];
+  }
+}
+
 function isGameWindowLog(text) {
   return /LWJGL|GLFW|OpenGL|Setting user:|Backend library|Opened .*window/i.test(
     String(text || '')
@@ -480,8 +495,10 @@ async function launchGame(onEvent = () => {}, onGameExit = () => {}) {
 
   // MCLC only adds -XstartOnFirstThread when parseInt(version.split('.')[1]) > 12.
   // MC 26.x has minor segment "2", so macOS launches without it and GLFW never opens a window.
-  const customArgs =
-    process.platform === 'darwin' ? ['-XstartOnFirstThread'] : undefined;
+  const customArgs = [
+    ...(process.platform === 'darwin' ? ['-XstartOnFirstThread'] : []),
+    ...readUserJvmArgs(gameRoot),
+  ];
 
   const launchMemory = getMemoryState().memory;
 

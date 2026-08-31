@@ -29,7 +29,16 @@ const NOTE_CONFIG = 'Installing Config and Settings…';
 
 const PACK_PREFIXES = ['mods/', 'resourcepacks/', 'shaderpacks/'];
 const STATIC_PREFIXES = ['config/', 'shaderpacks/'];
-const STATIC_ROOT_FILES = ['options.txt'];
+const STATIC_ROOT_FILES = ['options.txt', 'user_jvm_args.txt'];
+/** Pack-managed configs always re-sync when the remote blob changes (not missing-only). */
+const FORCE_SYNC_STATIC = [
+  'user_jvm_args.txt',
+  'config/voxelmapsync.properties',
+  'config/voxyserver.json',
+  'config/voxy-config.json',
+  'config/c2me.toml',
+  'config/sound_physics_remastered/soundphysics.properties',
+];
 const STATIC_EXCLUDE = [
   'config/spark/tmp/',
   'config/spark/tmp-client/',
@@ -202,8 +211,12 @@ function missingUserStaticFiles(installDir, entries) {
 }
 
 function staticEntryNeedsDownload(installDir, entry, staticFileShas) {
+  const dest = path.join(installDir, entry.path);
+  if (FORCE_SYNC_STATIC.includes(entry.path)) {
+    return !fs.existsSync(dest) || staticFileShas[entry.path] !== entry.sha;
+  }
   if (isUserPreservedStatic(entry.path)) {
-    return !fs.existsSync(path.join(installDir, entry.path));
+    return !fs.existsSync(dest);
   }
   return staticFileShas[entry.path] !== entry.sha;
 }
